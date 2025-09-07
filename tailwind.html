@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Color Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          animation: {
+            'bounce-slow': 'bounce 2s infinite',
+            'pulse-slow': 'pulse 3s infinite',
+            'color-shift': 'colorShift 0.6s ease-in-out',
+          },
+          keyframes: {
+            colorShift: {
+              '0%': { transform: 'scale(1) rotate(0deg)' },
+              '50%': { transform: 'scale(1.05) rotate(180deg)' },
+              '100%': { transform: 'scale(1) rotate(360deg)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @keyframes colorShift {
+      0% { transform: scale(1) rotate(0deg); }
+      50% { transform: scale(1.05) rotate(180deg); }
+      100% { transform: scale(1) rotate(360deg); }
+    }
+    
+    .color-transition {
+      transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-effect {
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 color-transition bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 dark:from-gray-800 dark:via-gray-900 dark:to-black font-sans">
+  
+  <!-- Dark Mode Toggle -->
+  <div class="absolute top-4 right-4 sm:top-6 sm:right-6">
+    <button 
+      onclick="toggleDarkMode()" 
+      class="p-3 rounded-full bg-white/20 glass-effect text-white hover:bg-white/30 focus:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 transform transition-all duration-300 hover:scale-110 hover:rotate-12 active:scale-95"
+      aria-label="Toggle dark mode"
+    >
+      <svg id="darkModeIcon" class="w-6 h-6 transition-transform duration-300" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Main Content Card -->
+  <div class="glass-effect bg-white/10 dark:bg-gray-800/20 rounded-3xl p-8 sm:p-12 shadow-2xl border border-white/20 dark:border-gray-700/30 transform transition-all duration-500 hover:scale-105 hover:shadow-3xl max-w-md w-full text-center">
+    
+    <!-- Title with Animation -->
+    <h1 class="text-4xl sm:text-5xl font-bold text-white dark:text-gray-100 mb-8 animate-pulse-slow">
+      🎨 <span class="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 bg-clip-text text-transparent">Color</span> Generator
+    </h1>
+    
+    <!-- Color Display Section -->
+    <div class="mb-8">
+      <div id="colorPreview" class="w-24 h-24 sm:w-32 sm:h-32 mx-auto rounded-full border-4 border-white/30 dark:border-gray-300/30 shadow-lg mb-6 transform transition-all duration-300 hover:scale-110 hover:rotate-12 bg-white"></div>
+      
+      <div id="colorCode" class="text-2xl sm:text-3xl font-mono font-bold text-white dark:text-gray-100 mb-4 p-4 bg-black/20 dark:bg-gray-900/40 rounded-xl border border-white/20 dark:border-gray-600/30 transition-all duration-300 hover:bg-black/30 dark:hover:bg-gray-900/60">
+        Click to generate!
+      </div>
+      
+      <div id="colorInfo" class="text-sm text-white/80 dark:text-gray-300 opacity-0 transition-opacity duration-300"></div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="space-y-4">
+      <button 
+        onclick="generateColor()" 
+        class="w-full py-4 px-8 text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 focus:outline-none focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 active:scale-95 active:translate-y-0"
+      >
+        ✨ Generate New Color
+      </button>
+      
+      <button 
+        onclick="copyColor()" 
+        id="copyBtn"
+        class="w-full py-3 px-6 text-sm font-medium bg-white/20 hover:bg-white/30 dark:bg-gray-700/40 dark:hover:bg-gray-600/50 text-white rounded-lg shadow-md transform transition-all duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white/50 dark:focus:ring-gray-400 active:scale-95 border border-white/20 dark:border-gray-600/30"
+      >
+        📋 Copy Color Code
+      </button>
+    </div>
+    
+    <!-- Color History -->
+    <div class="mt-8">
+      <h3 class="text-lg font-semibold text-white dark:text-gray-200 mb-4">Recent Colors</h3>
+      <div id="colorHistory" class="flex justify-center space-x-2 flex-wrap gap-2"></div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <div class="mt-8 text-center text-white/70 dark:text-gray-400">
+    <p class="text-sm">Press spacebar to generate • Click colors to reuse</p>
+  </div>
+
+  <script>
+    let currentColor = '#ffffff';
+    let colorHistory = [];
+    let isDarkMode = false;
+
+   
+    document.addEventListener('DOMContentLoaded', function() {
+      generateColor();
+      
+     
+      document.addEventListener('keydown', function(e) {
+        if (e.code === 'Space') {
+          e.preventDefault();
+          generateColor();
+        }
+      });
+    });
+
+    function generateColor() {
+      
+      currentColor = "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
+      
+
+      document.body.style.background = `linear-gradient(135deg, ${currentColor}20, ${currentColor}60, ${currentColor}40)`;
+      
+    
+      const preview = document.getElementById("colorPreview");
+      preview.style.backgroundColor = currentColor;
+      preview.classList.add('animate-spin');
+      setTimeout(() => preview.classList.remove('animate-spin'), 600);
+      
+      document.getElementById("colorCode").textContent = currentColor.toUpperCase();
+      
+      const rgb = hexToRgb(currentColor);
+      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+      document.getElementById("colorInfo").innerHTML = `
+        RGB: ${rgb.r}, ${rgb.g}, ${rgb.b}<br>
+        HSL: ${Math.round(hsl.h)}°, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%
+      `;
+      document.getElementById("colorInfo").style.opacity = '1';
+      
+      addToHistory(currentColor);
+      
+      const btn = document.querySelector('button[onclick="generateColor()"]');
+      btn.classList.add('animate-bounce');
+      setTimeout(() => btn.classList.remove('animate-bounce'), 600);
+    }
+
+    function copyColor() {
+      navigator.clipboard.writeText(currentColor).then(() => {
+        const btn = document.getElementById('copyBtn');
+        const originalText = btn.textContent;
+        btn.textContent = '✅ Copied!';
+        btn.classList.add('bg-green-500', 'hover:bg-green-600');
+        
+        setTimeout(() => {
+          btn.textContent = originalText;
+          btn.classList.remove('bg-green-500', 'hover:bg-green-600');
+        }, 2000);
+      });
+    }
+
+    function addToHistory(color) {
+      if (!colorHistory.includes(color)) {
+        colorHistory.unshift(color);
+        if (colorHistory.length > 6) colorHistory.pop();
+        updateHistoryDisplay();
+      }
+    }
+
+    function updateHistoryDisplay() {
+      const historyEl = document.getElementById('colorHistory');
+      historyEl.innerHTML = colorHistory.map(color => `
+        <button 
+          onclick="useHistoryColor('${color}')"
+          class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white/30 dark:border-gray-400/30 shadow-md transform transition-all duration-200 hover:scale-125 hover:border-white active:scale-95"
+          style="background-color: ${color}"
+          title="${color}"
+        ></button>
+      `).join('');
+    }
+
+    function useHistoryColor(color) {
+      currentColor = color;
+      document.body.style.background = `linear-gradient(135deg, ${color}20, ${color}60, ${color}40)`;
+      document.getElementById("colorPreview").style.backgroundColor = color;
+      document.getElementById("colorCode").textContent = color.toUpperCase();
+      
+      const rgb = hexToRgb(color);
+      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+      document.getElementById("colorInfo").innerHTML = `
+        RGB: ${rgb.r}, ${rgb.g}, ${rgb.b}<br>
+        HSL: ${Math.round(hsl.h)}°, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%
+      `;
+    }
+
+    function toggleDarkMode() {
+      isDarkMode = !isDarkMode;
+      document.documentElement.classList.toggle('dark');
+      
+      const icon = document.getElementById('darkModeIcon');
+      icon.classList.add('animate-spin');
+      
+      setTimeout(() => {
+        if (isDarkMode) {
+          icon.innerHTML = '<path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>';
+        } else {
+          icon.innerHTML = '<path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>';
+        }
+        icon.classList.remove('animate-spin');
+      }, 150);
+    }
+    function hexToRgb(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+      } : null;
+    }
+
+    function rgbToHsl(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+      return { h: h * 360, s: s * 100, l: l * 100 };
+    }
+  </script>
+</body>
+</html>
